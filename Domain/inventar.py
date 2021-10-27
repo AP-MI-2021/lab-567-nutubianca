@@ -1,4 +1,4 @@
-def creeaza_obiect(id, nume, descriere, pret_achizitie, locatie):
+def creeaza_obiect(id, nume, descriere, pret, locatie):
     '''
     creeaza un obiect din inventar
     :param id: string
@@ -8,58 +8,52 @@ def creeaza_obiect(id, nume, descriere, pret_achizitie, locatie):
     :param locatie: string
     :return:
     '''
-    return {
-        "id": id,
-        "nume": nume,
-        "descriere": descriere,
-        "pret": pret_achizitie,
-        "locatie": locatie
-    }
+    return [id,nume,descriere,pret,locatie]
 
 
 def getID(obiect):
     '''
     preia id-ul unui obiect din inventar
-    :param obiect: dictionar ce retine un obiect
+    :param obiect: touple ce retine un obiect
     :return: id-ul obiectului
     '''
-    return obiect["id"]
+    return obiect[0]
 
 
 def getNume(obiect):
     '''
     preia numele unui obiect din inventar
-    :param obiect: dictionar ce retine un obiect
+    :param obiect: touple ce retine un obiect
     :return: numele obiectului
     '''
-    return obiect["nume"]
+    return obiect[1]
 
 
 def getDescriere(obiect):
     '''
     preia descrierea unui obiect din inventar
-    :param obiect: dictionar ce retine un obiect
+    :param obiect: touple ce retine un obiect
     :return: descrierea obiectului
     '''
-    return obiect["descriere"]
+    return obiect[2]
 
 
 def getPret(obiect):
     '''
     preia pretul achizitiei unui obiect din inventar
-    :param obiect: dictionar ce retine un obiect
+    :param obiect: touple ce retine un obiect
     :return: pretule achizitiei obiectului
     '''
-    return obiect["pret"]
+    return obiect[3]
 
 
 def getLocatie(obiect):
     '''
     preia locatia unui obiect din inventar
-    :param obiect: dictionar ce retine un obiect
+    :param obiect: touple ce retine un obiect
     :return: locatia obiectului
     '''
-    return obiect["locatie"]
+    return obiect[4]
 
 
 def toString(obiect):
