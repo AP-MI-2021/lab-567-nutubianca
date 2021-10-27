@@ -1,5 +1,5 @@
 from Domain.inventar import creeaza_obiect, toString
-from Logic.CRUD import delete_object, modify_object
+from Logic.CRUD import delete_object, modify_object, add_object
 
 
 def print_menu():
@@ -16,8 +16,7 @@ def ui_adaugare(lista):
     descriere = input("Dati descriere: ")
     pret = float(input("Dati pretul achizitiei: "))
     locatie = input("Dati locatia: ")
-    lista.append(creeaza_obiect(id, nume, descriere, pret, locatie))
-    return lista
+    return add_object(id, nume, descriere, pret, locatie, lista)
 
 def ui_deleting(lista):
     id = input("Dati id-ul obiectului de sters: ")
