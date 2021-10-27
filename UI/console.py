@@ -16,8 +16,8 @@ def ui_adaugare(lista):
     descriere = input("Dati descriere: ")
     pret = float(input("Dati pretul achizitiei: "))
     locatie = input("Dati locatia: ")
-    return creeaza_obiect(id, nume, descriere, pret, locatie)
-
+    lista.append(creeaza_obiect(id, nume, descriere, pret, locatie))
+    return lista
 
 def ui_deleting(lista):
     id = input("Dati id-ul obiectului de sters: ")
@@ -30,7 +30,7 @@ def ui_modify(lista):
     descriere = input("Dati noua descriere: ")
     pret = float(input("Dati noul pret de achizitie: "))
     locatie = input("Dati noua locatie: ")
-    return modify_object(id, nume, descriere, pret, locatie)
+    return modify_object(id, nume, descriere, pret, locatie, lista)
 
 
 def show_all(lista):

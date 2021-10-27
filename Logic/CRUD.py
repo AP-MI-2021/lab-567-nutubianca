@@ -56,4 +56,4 @@ def modify_object(id, nume, descriere, pret, locatie, lista):
             lista_noua.append(obiect_nou)
         else:
             lista_noua.append(obiect)
-        return lista_noua
+    return lista_noua
