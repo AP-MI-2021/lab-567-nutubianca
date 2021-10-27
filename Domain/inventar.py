@@ -8,7 +8,7 @@ def creeaza_obiect(id, nume, descriere, pret, locatie):
     :param locatie: string
     :return:
     '''
-    return [id,nume,descriere,pret,locatie]
+    return [id, nume, descriere, pret, locatie]
 
 
 def getID(obiect):
