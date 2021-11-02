@@ -1,11 +1,12 @@
 from Domain.inventar import creeaza_obiect, toString
-from Logic.CRUD import delete_object, modify_object, add_object
+from Logic.CRUD import delete_object, modify_object, add_object, moving_objects
 
 
 def print_menu():
     print("1. Adauga obiect")
     print("2. Sterge obiect")
     print("3. Modifica un obiect")
+    print("4. Mutarea tuturor obiectelor dintr-o locatie in alta")
     print("a. Afisare obiecte")
     print("x. Iesire")
 
@@ -37,6 +38,11 @@ def show_all(lista):
         print(toString(obiect))
 
 
+def ui_moving(lista):
+    locatie_1 = input("Dati locatia din care va avea loc mutarea:")
+    locatie_2 = input("Dati locatia in care va avea loc mutarea:")
+    return moving_objects(locatie_1, locatie_2, lista)
+
 def runMenu(lista):
     while True:
         print_menu()
@@ -47,6 +53,8 @@ def runMenu(lista):
             lista = ui_deleting(lista)
         elif optiune == "3":
             lista = ui_modify(lista)
+        elif optiune == "4":
+            lista = ui_moving(lista)
         elif optiune == "a":
             show_all(lista)
         elif optiune == "x":

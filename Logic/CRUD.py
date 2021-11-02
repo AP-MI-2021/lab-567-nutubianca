@@ -1,4 +1,4 @@
-from Domain.inventar import creeaza_obiect, getID
+from Domain.inventar import creeaza_obiect, getID, getLocatie, getNume, getDescriere, getPret
 
 
 def add_object(id, nume, descriere, pret, locatie, lista):
@@ -53,6 +53,24 @@ def modify_object(id, nume, descriere, pret, locatie, lista):
     for obiect in lista:
         if getID(obiect) == id:
             obiect_nou = creeaza_obiect(id, nume, descriere, pret, locatie)
+            lista_noua.append(obiect_nou)
+        else:
+            lista_noua.append(obiect)
+    return lista_noua
+
+
+def moving_objects(locatie_1, locatie_2, lista):
+    """
+    -muta toate obiectele dintr-o locatie in alta
+    :param locatie_1: string cu numele primei locatii
+    :param locatie_2: string cu numele locatiei dorite pentru obiecte
+    :param lista: lista initiala, dar cu modificarile specificate
+    :return:
+    """
+    lista_noua = []
+    for obiect in lista:
+        if getLocatie(obiect) == locatie_1:
+            obiect_nou = creeaza_obiect(getID(obiect),getNume(obiect), getDescriere(obiect), getPret(obiect), locatie_2)
             lista_noua.append(obiect_nou)
         else:
             lista_noua.append(obiect)

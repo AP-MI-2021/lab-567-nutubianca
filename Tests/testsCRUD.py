@@ -1,5 +1,5 @@
 from Domain.inventar import getID, getNume, getDescriere, getPret, getLocatie
-from Logic.CRUD import add_object, get_by_ID, delete_object, modify_object
+from Logic.CRUD import add_object, get_by_ID, delete_object, modify_object, moving_objects
 
 
 def test_add_object():
@@ -38,4 +38,15 @@ def test_modify_object():
     assert getDescriere(lista[0]) == "mic"
     assert getPret(lista[0]) == 60
     assert getLocatie(lista[0]) == "nr2"
-    
+
+
+
+def test_moving_objects():
+    lista = []
+    lista = add_object("1", "hartie", "A4", 20, "nr1", lista)
+    lista = add_object("2", "pixuri", "albastre", 50, "nr1", lista)
+    lista = add_object("3", "capsator", "mic", 60, "nr2", lista)
+    lista = moving_objects("nr1", "nr4", lista)
+    assert getLocatie(lista[0]) == "nr4"
+    assert getLocatie(lista[1]) == "nr4"
+    assert getLocatie(lista[2]) == "nr2"
