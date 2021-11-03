@@ -1,5 +1,5 @@
 from Domain.inventar import creeaza_obiect, toString
-from Logic.CRUD import delete_object, modify_object, add_object, moving_objects, add_string
+from Logic.CRUD import delete_object, modify_object, add_object, moving_objects, add_string, get_by_ID
 
 
 def print_menu():
@@ -14,25 +14,47 @@ def print_menu():
 
 
 def ui_adaugare(lista):
-    id = input("Dati id-ul: ")
-    nume = input("Dati nume: ")
-    descriere = input("Dati descriere: ")
-    pret = float(input("Dati pretul achizitiei: "))
-    locatie = input("Dati locatia: ")
-    return add_object(id, nume, descriere, pret, locatie, lista)
+    try:
+        id = input("Dati id-ul: ")
+        nume = input("Dati nume: ")
+        descriere = input("Dati descriere: ")
+        pret = float(input("Dati pretul achizitiei: "))
+        locatie = input("Dati locatia(4 caractere): ")
+        if len(locatie) != 4:
+            print("Eroare: locatie necorespunzatoare!")
+            return lista
+        return add_object(id, nume, descriere, pret, locatie, lista)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
+        return lista
 
 def ui_deleting(lista):
-    id = input("Dati id-ul obiectului de sters: ")
-    return delete_object(id, lista)
+    try:
+        id = input("Dati id-ul obiectului de sters: ")
+        if get_by_ID(id, lista) is None:
+            raise ValueError("Nu exista un obiect cu id-ul dat!")
+        return delete_object(id, lista)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
+        return lista
 
 
 def ui_modify(lista):
-    id = input("Dati id-ul obiectului de modificat: ")
-    nume = input("Dati noul nume: ")
-    descriere = input("Dati noua descriere: ")
-    pret = float(input("Dati noul pret de achizitie: "))
-    locatie = input("Dati noua locatie: ")
-    return modify_object(id, nume, descriere, pret, locatie, lista)
+    try:
+        id = input("Dati id-ul obiectului de modificat: ")
+        if get_by_ID(id, lista) is None:
+            raise ValueError("Nu exista un obiect cu id-ul dat!")
+        nume = input("Dati noul nume: ")
+        descriere = input("Dati noua descriere: ")
+        pret = float(input("Dati noul pret de achizitie: "))
+        locatie = input("Dati noua locatie: ")
+        if len(locatie) != 4:
+            print("Eroare: locatie necorespunzatoare!")
+            return lista
+        return modify_object(id, nume, descriere, pret, locatie, lista)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
+        return lista
 
 
 def show_all(lista):
@@ -47,9 +69,13 @@ def ui_moving(lista):
 
 
 def ui_string(lista):
-    pret = float(input("Dati pretul: "))
-    string_adaugare = input("Dati string-ul dorit: ")
-    return add_string(pret, string_adaugare, lista)
+    try:
+        pret = float(input("Dati pretul: "))
+        string_adaugare = input("Dati string-ul dorit: ")
+        return add_string(pret, string_adaugare, lista)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
+        return lista
 
 
 def runMenu(lista):
