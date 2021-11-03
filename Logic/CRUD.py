@@ -12,6 +12,14 @@ def add_object(id, nume, descriere, pret, locatie, lista):
     :param lista: lista de obiecte
     :return: o lista cu obiectele initiale, fiimd adaugat un obiect nou
     """
+    if len(locatie) != 4:
+        print("Eroare: locatie necorespunzatoare!")
+        return lista
+    try:
+        pret_int=int(pret)
+    except ValueError as ve:
+        print("Eroare: {}".format(ve))
+        return lista
     obiect = creeaza_obiect(id, nume, descriere, pret, locatie)
     return lista + [obiect]
 
@@ -35,6 +43,8 @@ def delete_object(id, lista):
     :param lista: lista de obiecte
     :return: lista fara obiectul cu id-ul dat de utilizator
     """
+    if get_by_ID(id, lista) is None:
+        raise ValueError("Nu exista un obiect cu id-ul dat!")
     return [obiect for obiect in lista if getID(obiect) != id]
 
 
@@ -49,6 +59,11 @@ def modify_object(id, nume, descriere, pret, locatie, lista):
     :param lista: lista de obiecte
     :return: lista_noua: lista initiala, dar cu obiectul dorit modificat
     """
+    if get_by_ID(id, lista) is None:
+        raise ValueError("Nu exista un obiect cu id-ul dat!")
+    if len(locatie) != 4:
+        print("Eroare: locatie necorespunzatoare!")
+        return lista
     lista_noua = []
     for obiect in lista:
         if getID(obiect) == id:
