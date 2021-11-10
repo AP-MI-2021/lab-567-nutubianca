@@ -15,13 +15,19 @@ def add_object(id, nume, descriere, pret, locatie, lista):
     if len(locatie) != 4:
         print("Eroare: locatie necorespunzatoare!")
         return lista
+    if "0" in id or "-" in id:
+        print("Eroare: ID-ul nu poate fi negativ sau egal cu 0!")
+        return lista
     try:
-        pret_int=int(pret)
+        pret_int = int(pret)
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
+    if float(pret) <= 0:
+        raise ValueError("Pretul trebuie sa fie mai mare ca 0!")
     obiect = creeaza_obiect(id, nume, descriere, pret, locatie)
     return lista + [obiect]
+
 
 def get_by_ID(id, lista):
     """
@@ -85,7 +91,8 @@ def moving_objects(locatie_1, locatie_2, lista):
     lista_noua = []
     for obiect in lista:
         if getLocatie(obiect) == locatie_1:
-            obiect_nou = creeaza_obiect(getID(obiect),getNume(obiect), getDescriere(obiect), getPret(obiect), locatie_2)
+            obiect_nou = creeaza_obiect(getID(obiect), getNume(obiect), getDescriere(obiect), getPret(obiect),
+                                        locatie_2)
             lista_noua.append(obiect_nou)
         else:
             lista_noua.append(obiect)
@@ -105,8 +112,54 @@ def add_string(pret, string, lista):
     for obiect in lista:
         if getPret(obiect) > pret:
             descriere_noua = getDescriere(obiect) + " " + string
-            obiect_nou = creeaza_obiect(getID(obiect),getNume(obiect), descriere_noua, getPret(obiect), getLocatie(obiect))
+            obiect_nou = creeaza_obiect(getID(obiect), getNume(obiect), descriere_noua, getPret(obiect),
+                                        getLocatie(obiect))
             lista_noua.append(obiect_nou)
         else:
             lista_noua.append(obiect)
     return lista_noua
+
+
+def sorting_objects(lista):
+    """
+    -ordoneaza obiectele crescator dupa pretul de achizitie
+    :param lista: lista de obiecte
+    :return: lista data ordonata dupa pretul de achizitie
+    """
+    return sorted(lista, key=lambda obiect: getPret(obiect))
+
+
+def maxPretPerLocatie(lista):
+    '''
+    -determina cel mai mare pret pentru fiecare locatie
+    :param lista: lista de obiecte
+    :return: un dictionar rezultat
+    '''
+    rezultat = {}
+    for obiect in lista:
+        locatie = getLocatie(obiect)
+        pret = getPret(obiect)
+        if locatie in rezultat:
+            if pret > rezultat[locatie]:
+                rezultat[locatie] = pret
+        else:
+            rezultat[locatie] = pret
+    return rezultat
+
+
+def sumaPreturiPerLocatie(lista):
+    '''
+    -determina suma preturilor pentru fiecare locatie
+    :param lista: lista de obiecte
+    :return: un dictionar rezultat
+    '''
+    rezultat = {}
+    for obiect in lista:
+        locatie = getLocatie(obiect)
+        pret = getPret(obiect)
+        if locatie in rezultat:
+            rezultat[locatie] = rezultat[locatie] + pret
+        else:
+            rezultat[locatie] = pret
+    return rezultat
+

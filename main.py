@@ -5,7 +5,7 @@ from UI.new_console import Menu
 
 def main():
     runAll()
-    Menu([])
+    runMenu([])
 
 
 if __name__ == '__main__':
