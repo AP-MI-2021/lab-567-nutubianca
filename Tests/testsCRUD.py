@@ -90,3 +90,111 @@ def test_sumaPreturiPerLocatie():
     rezultat = sumaPreturiPerLocatie(lista)
     assert rezultat["nr11"] == 70
     assert rezultat["nr22"] == 60
+
+def test_undo_redo():
+    undo_operations = []
+    redo_operations = []
+    lista = []
+    lista = add_object("1", "hartie", "A4", 20, "nr11", lista)
+    lista = add_object("2", "pixuri", "albastre", 50, "nr11", lista)
+    lista = add_object("3", "capsator", "mic", 60, "nr22", lista)
+    undo_operations.append([
+        lambda: delete_object("3", lista),
+        lambda: add_object("3", "capsator", "mic", 60, "nr22", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 2
+
+    undo_operations.append([
+        lambda: delete_object("2", lista),
+        lambda: add_object("2", "pixuri", "albastre", 50, "nr11", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 1
+
+    undo_operations.append([
+        lambda: delete_object("1", lista),
+        lambda: add_object("1", "hartie", "A4", 20, "nr11", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 0
+
+    lista = add_object("1", "hartie", "A4", 20, "nr11", lista)
+    lista = add_object("2", "pixuri", "albastre", 50, "nr11", lista)
+    lista = add_object("3", "capsator", "mic", 60, "nr22", lista)
+    redo_operations.clear()
+
+    assert len(redo_operations) == 0
+
+    undo_operations.append([
+        lambda: delete_object("3", lista),
+        lambda: add_object("3", "capsator", "mic", 60, "nr22", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    undo_operations.append([
+        lambda: delete_object("2", lista),
+        lambda: add_object("2", "pixuri", "albastre", 50, "nr11", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 1
+    lista = add_object("4", "capsator", "mic", 100, "nr22", lista)
+    redo_operations.clear()
+
+    assert len(lista) == 2
+
+    undo_operations.append([
+        lambda: delete_object("4", lista),
+        lambda: add_object("4", "capsator", "mic", 100, "nr22", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 1
+
+    undo_operations.append([
+        lambda: delete_object("1", lista),
+        lambda: add_object("1", "hartie", "A4", 20, "nr11", lista)
+    ])
+    operations = undo_operations.pop()
+    redo_operations.append(operations)
+    lista = operations[0]()
+
+    assert len(lista) == 0
+
+    operations = redo_operations.pop()
+    undo_operations.append(operations)
+    lista = operations[1]()
+
+    operations = redo_operations.pop()
+    undo_operations.append(operations)
+    lista = operations[1]()
+
+    assert len(lista) == 2
+    assert getID(lista[0]) == "1"
+    assert getID(lista[1]) == "4"
+
+    if len(redo_operations) > 0:
+        operations = redo_operations.pop()
+        undo_operations.append(operations)
+        lista = operations[1]()
+
+    assert len(lista) == 2
+    assert getID(lista[0]) == "1"
+    assert getID(lista[1]) == "4"
+

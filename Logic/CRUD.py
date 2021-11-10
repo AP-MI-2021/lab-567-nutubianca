@@ -192,4 +192,3 @@ def sumaPreturiPerLocatie(lista):
         else:
             rezultat[locatie] = pret
     return rezultat
-
