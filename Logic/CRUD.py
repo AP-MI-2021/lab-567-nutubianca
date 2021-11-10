@@ -120,6 +120,28 @@ def add_string(pret, string, lista):
     return lista_noua
 
 
+def delete_string(pret, string, lista):
+    """
+    -sterge un sufix dat de la toate descrierile obiectelor cu
+    pretul mai mare decat o valoare data
+    :param pret: pretul dat de utilizator(de tip float)
+    :param string: string de sirul dorit pentru adaugare
+    :param lista: lista de obiecte
+    :return: lista_noua: lista initiala, dar cu obiectele dorite modificate
+    """
+    lista_noua = []
+    for obiect in lista:
+        if getPret(obiect) > pret and string in getDescriere(obiect):
+            descriere_veche = getDescriere(obiect)
+            descriere_noua = descriere_veche[:-len(string)]
+            obiect_nou = creeaza_obiect(getID(obiect), getNume(obiect), descriere_noua, getPret(obiect),
+                                        getLocatie(obiect))
+            lista_noua.append(obiect_nou)
+        else:
+            lista_noua.append(obiect)
+    return lista_noua
+
+
 def sorting_objects(lista):
     """
     -ordoneaza obiectele crescator dupa pretul de achizitie

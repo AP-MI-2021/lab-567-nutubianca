@@ -1,6 +1,6 @@
 from Domain.inventar import creeaza_obiect, toString, getNume, getDescriere, getPret, getLocatie
 from Logic.CRUD import delete_object, modify_object, add_object, moving_objects, add_string, get_by_ID, sorting_objects, \
-    maxPretPerLocatie, sumaPreturiPerLocatie
+    maxPretPerLocatie, sumaPreturiPerLocatie, delete_string
 
 
 def print_menu():
@@ -79,6 +79,7 @@ def ui_modify(lista, undo_operations):
             ),
             lambda: modify_object(id,nume,descriere,pret,locatie,lista)
         ])
+        return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
@@ -93,14 +94,24 @@ def ui_moving(lista, undo_operations):
     locatie_1 = input("Dati locatia din care va avea loc mutarea:")
     locatie_2 = input("Dati locatia in care va avea loc mutarea:")
     rezultat = moving_objects(locatie_1, locatie_2, lista)
-    
+    undo_operations.append([
+        lambda: moving_objects(locatie_2, locatie_1, lista),
+        lambda: moving_objects(locatie_1, locatie_2, lista)
+    ])
+    return rezultat
 
 
 def ui_string(lista, undo_operations):
     try:
         pret = float(input("Dati pretul: "))
         string_adaugare = input("Dati string-ul dorit: ")
-        return add_string(pret, string_adaugare, lista)
+        rezultat = add_string(pret, string_adaugare, lista)
+        undo_operations.append([
+            lambda: delete_string(pret,string_adaugare,lista),
+            lambda: add_string(pret, string_adaugare, lista)
+        ])
+
+        return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
