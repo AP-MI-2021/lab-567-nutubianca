@@ -19,12 +19,20 @@ def add_object(id, nume, descriere, pret, locatie, lista):
         print("Eroare: ID-ul nu poate fi negativ sau egal cu 0!")
         return lista
     try:
-        pret_int = int(pret)
+        pret_float = float(pret)
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
+    try:
+        id_int = int(id)
+    except ValueError as ve:
+        print("Eroare: Pretul trebuie sa fie un numar intreg!")
+        return lista
     if float(pret) <= 0:
         raise ValueError("Pretul trebuie sa fie mai mare ca 0!")
+    for obiect in lista:
+        if getID(obiect) == id:
+            raise ValueError("ID-ul exista deja!")
     obiect = creeaza_obiect(id, nume, descriere, pret, locatie)
     return lista + [obiect]
 

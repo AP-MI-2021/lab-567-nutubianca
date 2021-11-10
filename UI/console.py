@@ -14,11 +14,12 @@ def print_menu():
     print("7. Ordonarea obiectelor crescator dupa pretul achizitiei")
     print("8. Afisarea sumelor preturilor pentru fiecare locatie")
     print("9. Undo")
+    print("10.Redo")
     print("a. Afisare obiecte")
     print("x. Iesire")
 
 
-def ui_adaugare(lista, undo_operations):
+def ui_adaugare(lista, undo_operations, redo_operations):
     try:
         id = input("Dati id-ul: ")
         nume = input("Dati nume: ")
@@ -30,12 +31,13 @@ def ui_adaugare(lista, undo_operations):
             lambda: delete_object(id,rezultat),
             lambda: add_object(id,nume,descriere,pret,locatie,lista)
         ])
+        redo_operations.clear()
         return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
 
-def ui_deleting(lista, undo_operations):
+def ui_deleting(lista, undo_operations, redo_operations):
     try:
         id = input("Dati id-ul obiectului de sters: ")
         if get_by_ID(id, lista) is None:
@@ -50,15 +52,16 @@ def ui_deleting(lista, undo_operations):
                 getPret(deleted_object),
                 getLocatie(deleted_object),
                 rezultat),
-            lambda: deleted_object(id,lista)
+            lambda: delete_object(id,lista)
         ])
+        redo_operations.clear()
         return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
 
 
-def ui_modify(lista, undo_operations):
+def ui_modify(lista, undo_operations, redo_operations):
     try:
         id = input("Dati id-ul obiectului de modificat: ")
         if get_by_ID(id, lista) is None:
@@ -79,6 +82,7 @@ def ui_modify(lista, undo_operations):
             ),
             lambda: modify_object(id,nume,descriere,pret,locatie,lista)
         ])
+        redo_operations.clear()
         return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
@@ -90,7 +94,7 @@ def show_all(lista):
         print(toString(obiect))
 
 
-def ui_moving(lista, undo_operations):
+def ui_moving(lista, undo_operations, redo_operations):
     locatie_1 = input("Dati locatia din care va avea loc mutarea:")
     locatie_2 = input("Dati locatia in care va avea loc mutarea:")
     rezultat = moving_objects(locatie_1, locatie_2, lista)
@@ -98,10 +102,11 @@ def ui_moving(lista, undo_operations):
         lambda: moving_objects(locatie_2, locatie_1, lista),
         lambda: moving_objects(locatie_1, locatie_2, lista)
     ])
+    redo_operations.clear()
     return rezultat
 
 
-def ui_string(lista, undo_operations):
+def ui_string(lista, undo_operations, redo_operations):
     try:
         pret = float(input("Dati pretul: "))
         string_adaugare = input("Dati string-ul dorit: ")
@@ -110,15 +115,22 @@ def ui_string(lista, undo_operations):
             lambda: delete_string(pret,string_adaugare,lista),
             lambda: add_string(pret, string_adaugare, lista)
         ])
-
+        redo_operations.clear()
         return rezultat
     except ValueError as ve:
         print("Eroare: {}".format(ve))
         return lista
 
 
-def ui_sorting_objects(lista):
-    show_all(sorting_objects(lista))
+def ui_sorting_objects(lista, undo_operations, redo_operations):
+    rezultat = sorting_objects(lista)
+    undo_operations.append([
+        lambda: lista,
+        lambda: sorting_objects(lista)
+    ])
+    show_all(rezultat)
+    redo_operations.clear()
+    return sorting_objects(lista)
 
 
 def ui_highest_price(lista):
@@ -135,31 +147,40 @@ def ui_sums_prices(lista):
 
 def runMenu(lista):
     undo_operations = []
+    redo_operations = []
     while True:
         print_menu()
         optiune = input("Dati optiunea: ")
         if optiune == "1":
-            lista = ui_adaugare(lista, undo_operations)
+            lista = ui_adaugare(lista, undo_operations, redo_operations)
         elif optiune == "2":
-            lista = ui_deleting(lista, undo_operations)
+            lista = ui_deleting(lista, undo_operations, redo_operations)
         elif optiune == "3":
-            lista = ui_modify(lista, undo_operations)
+            lista = ui_modify(lista, undo_operations, redo_operations)
         elif optiune == "4":
-            lista = ui_moving(lista, undo_operations)
+            lista = ui_moving(lista, undo_operations, redo_operations)
         elif optiune == "5":
-            lista = ui_string(lista, undo_operations)
+            lista = ui_string(lista, undo_operations, redo_operations)
         elif optiune == "6":
             ui_highest_price(lista)
         elif optiune == "7":
-            ui_sorting_objects(lista)
+            lista = ui_sorting_objects(lista, undo_operations, redo_operations)
         elif optiune == "8":
             ui_sums_prices(lista)
         elif optiune == "9":
             if len(undo_operations) > 0:
                 operations = undo_operations.pop()
+                redo_operations.append(operations)
                 lista = operations[0]()
             else:
                 print("Nu se poate face undo!")
+        elif optiune == "10":
+            if len(redo_operations) > 0:
+                operations = redo_operations.pop()
+                undo_operations.append(operations)
+                lista = operations[1]()
+            else:
+                print("Nu se poate face redo!")
         elif optiune == "a":
             show_all(lista)
         elif optiune == "x":
